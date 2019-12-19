@@ -3,7 +3,7 @@ import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import SignIn from './pages/SignIn';
+import Sign from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import CheckIns from './pages/CheckIns';
 import Profile from './pages/Profile';
@@ -15,13 +15,21 @@ export default (isSigned = false) =>
   createAppContainer(
     createSwitchNavigator(
       {
-        Sign: createSwitchNavigator({
-          SignIn,
-          SignUp,
-        }),
+        Sign,
         App: createBottomTabNavigator(
           {
-            CheckIns,
+            CheckIn: createStackNavigator(
+              {CheckIns},
+              {
+                headerLayoutPreset: 'center',
+                navigationOptions: {
+                  tabBarLabel: 'Check-ins',
+                  tabBarIcon: ({tintColor}) => (
+                    <Icon name="edit-location" size={20} color={tintColor} />
+                  ),
+                },
+              }
+            ),
             New: {
               screen: createStackNavigator(
                 {
@@ -58,10 +66,16 @@ export default (isSigned = false) =>
             resetOnBlur: true,
             tabBarOptions: {
               keyboardHidesTabBar: true,
-              activeTintColor: '#FFF',
-              inactiveTintColor: 'rgba(255,255,255,0.6)',
+              activeTintColor: '#ee4d64',
+              inactiveTintColor: '#999999',
+              tabStyle: {
+                height: 54,
+                alignItems: 'center',
+                justifyContent: 'center',
+              },
               style: {
-                backgroundColor: '#8d41a8',
+                backgroundColor: '#fff',
+                height: 60,
               },
             },
           }
