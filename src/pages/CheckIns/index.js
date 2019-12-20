@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {withNavigationFocus} from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {Alert} from 'react-native';
 import Background from '~/components/Background';
 import {Container, Title, List} from './styles';
 import CheckIn from '~/components/CheckIn';
@@ -13,27 +14,47 @@ function CheckIns({isFocused}) {
   const student = useSelector(state => state.student.profile);
 
   const [checkIns, setCheckIns] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function loadCheckIns() {
+      setLoading(true);
       const response = await api.get(`students/${student.id}/checkins`);
       const {data} = response;
-      setCheckIns(data.sort((a, b) => a.id < b.id));
+      let idx = 0;
+      setCheckIns(
+        data
+          .map(item => {
+            idx += 1;
+            item.index = idx;
+            return item;
+          })
+          .sort((a, b) => a.id < b.id)
+      );
+      setLoading(false);
     }
     loadCheckIns();
   }, [student]);
 
   async function handleAddCheckIn() {
-    const response = await api.post(`students/${student.id}/checkins`);
-
-    setCheckIns([response.data, ...checkIns]);
-    // console.tron.log(response.data);
+    try {
+      setLoading(true);
+      const response = await api.post(`students/${student.id}/checkins`);
+      const idx = checkIns.length + 1;
+      setCheckIns([{...response.data, index: idx}, ...checkIns]);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      Alert.alert(error.response.data.error);
+    }
   }
 
   return (
     <Background>
       <Container>
-        <Button onPress={handleAddCheckIn}>Novo check-in</Button>
+        <Button loading={loading} onPress={handleAddCheckIn}>
+          New Check-in
+        </Button>
         <List
           data={checkIns}
           keyExtractor={item => String(item.id)}
@@ -43,15 +64,7 @@ function CheckIns({isFocused}) {
     </Background>
   );
 }
-/**
- * title: 'GYMPOINT',
-  headerTintColor: '#ee4d64',
-  headerTitleStyle: {
-    fontWeight: 'bold',
-  },
- *
- *
- */
+
 CheckIns.navigationOptions = {
   headerTitle: () => <LogoTitle />,
 };
