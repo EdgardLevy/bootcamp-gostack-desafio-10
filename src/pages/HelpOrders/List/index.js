@@ -4,23 +4,23 @@ import {withNavigationFocus} from 'react-navigation';
 import {Alert} from 'react-native';
 import Background from '~/components/Background';
 import {Container, List} from './styles';
-import CheckIn from '~/components/CheckIn';
+import HelpOrder from '~/components/HelpOrder';
 import api from '~/services/api';
 import Button from '~/components/Button';
 
-function CheckIns({isFocused}) {
+function HelpOrderList({navigation, isFocused}) {
   const student = useSelector(state => state.student.profile);
 
-  const [checkIns, setCheckIns] = useState([]);
+  const [helpOrders, setHelpOrders] = useState([1, 2, 3]);
   const [loading, setLoading] = useState(false);
-
+  /*
   useEffect(() => {
-    async function loadCheckIns() {
+    async function loadHelpOrders() {
       setLoading(true);
-      const response = await api.get(`students/${student.id}/checkins`);
+      const response = await api.get(`students/${student.id}/HelpOrders`);
       const {data} = response;
       let idx = 0;
-      setCheckIns(
+      setHelpOrders(
         data
           .map(item => {
             idx += 1;
@@ -31,36 +31,39 @@ function CheckIns({isFocused}) {
       );
       setLoading(false);
     }
-    loadCheckIns();
+    loadHelpOrders();
   }, [student]);
+  */
 
   async function handleAdd() {
+    navigation.navigate('NewHelpOrder');
+    /*
     try {
       setLoading(true);
-      const response = await api.post(`students/${student.id}/checkins`);
-      const idx = checkIns.length + 1;
-      setCheckIns([{...response.data, index: idx}, ...checkIns]);
+      const response = await api.post(`students/${student.id}/helporders`);
+      setHelpOrders([...response.data, ...helpOrders]);
       setLoading(false);
     } catch (error) {
       setLoading(false);
       Alert.alert(error.response.data.error);
     }
+    */
   }
 
   return (
     <Background>
       <Container>
         <Button loading={loading} onPress={handleAdd}>
-          New Check-in
+          Novo pedido de auxílio
         </Button>
         <List
-          data={checkIns}
-          keyExtractor={item => String(item.id)}
-          renderItem={({item}) => <CheckIn data={item} />}
+          data={helpOrders}
+          keyExtractor={item => String(item)}
+          renderItem={({item}) => <HelpOrder data={item} />}
         />
       </Container>
     </Background>
   );
 }
 
-export default withNavigationFocus(CheckIns);
+export default withNavigationFocus(HelpOrderList);
