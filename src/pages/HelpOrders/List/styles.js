@@ -9,4 +9,5 @@ export const List = styled.FlatList.attrs({
   showsVerticalScrollIndicator: false,
 })`
   margin-top: 25px;
+  flex: 1 auto;
 `;

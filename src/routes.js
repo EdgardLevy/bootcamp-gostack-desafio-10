@@ -1,18 +1,17 @@
 import React from 'react';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Sign from './pages/SignIn';
-import CheckIns from './pages/CheckIns';
-import SelectProvider from './pages/New/SelectProvider';
-import SelectDateTime from './pages/New/SelectDateTime';
-import Confirm from './pages/New/Confirm';
-
-import HelpOrderList from './pages/HelpOrders/List';
-import NewHelpOrder from './pages/HelpOrders/New';
 
 import LogoTitle from '~/components/LogoTitle';
+import SignOut from '~/components/SignOut';
+
+import CheckIns from './pages/CheckIns';
+import HelpOrderAnswer from './pages/HelpOrders/Answer';
+import HelpOrderList from './pages/HelpOrders/List';
+import NewHelpOrder from './pages/HelpOrders/New';
+import Sign from './pages/SignIn';
 
 export default (isSigned = false) =>
   createAppContainer(
@@ -23,12 +22,19 @@ export default (isSigned = false) =>
           {
             CheckIn: {
               screen: createStackNavigator(
-                {CheckIns},
+                {
+                  CheckIns,
+                },
                 {
                   headerLayoutPreset: 'center',
                   defaultNavigationOptions: {
                     headerTitle: () => <LogoTitle />,
+                    headerRight: () => <SignOut />,
+                    headerRightContainerStyle: {
+                      marginRight: 20,
+                    },
                   },
+
                   navigationOptions: {
                     tabBarLabel: 'Check-ins',
                     tabBarIcon: ({tintColor}) => (
@@ -43,41 +49,23 @@ export default (isSigned = false) =>
                 {
                   HelpOrderList,
                   NewHelpOrder,
+                  HelpOrderAnswer,
                 },
                 {
                   headerLayoutPreset: 'center',
                   defaultNavigationOptions: {
                     headerTitle: () => <LogoTitle />,
-                  },
-                }
-              ),
-              navigationOptions: {
-                tabBarLabel: 'Ask Help',
-                tabBarIcon: ({tintColor}) => (
-                  <Icon name="live-help" size={20} color={tintColor} />
-                ),
-              },
-            },
-            New: {
-              screen: createStackNavigator(
-                {
-                  SelectProvider,
-                  SelectDateTime,
-                  Confirm,
-                },
-                {
-                  headerLayoutPreset: 'center',
-                  defaultNavigationOptions: {
-                    headerTransparent: true,
-                    headerTintColor: '#FFF',
+                    headerRight: () => <SignOut />,
                     headerLeftContainerStyle: {
                       marginLeft: 20,
+                    },
+                    headerRightContainerStyle: {
+                      marginRight: 20,
                     },
                   },
                 }
               ),
               navigationOptions: {
-                tabBarVisible: false,
                 tabBarLabel: 'Ask Help',
                 tabBarIcon: ({tintColor}) => (
                   <Icon name="live-help" size={20} color={tintColor} />

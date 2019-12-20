@@ -1,3 +1,5 @@
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
@@ -8,15 +10,12 @@ export const Container = styled.View`
   padding-right: 20px;
   border-radius: 4px;
   background: #fff;
-
-  display: flex;
 `;
 
 export const Header = styled.View`
   align-items: center;
   justify-content: space-between;
-  background: blue;
-  flex: 1;
+  flex: 1 auto;
   flex-direction: row;
 `;
 
@@ -24,10 +23,24 @@ export const Left = styled.View`
   flex-direction: row;
 `;
 
-export const Status = styled.Text`
-  font-weight: bold;
+export const Status = styled.View`
   font-size: 14px;
+  align-items: center;
+  align-content: center;
+  flex-direction: row;
+`;
+
+export const StatusIcon = styled(Icon).attrs({
+  name: 'check-circle',
+  size: 18,
+})`
+  color: ${props => (props.answer ? '#42cb59' : '#999999')};
+`;
+
+export const StatusText = styled.Text`
   margin-left: 10px;
+  font-weight: bold;
+  color: ${props => (props.answer ? '#42cb59' : '#999999')};
 `;
 
 export const Time = styled.Text`
